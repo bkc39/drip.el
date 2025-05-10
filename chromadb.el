@@ -120,55 +120,79 @@ PARAMS is an optional alist of query parameters."
   "Add records defined by DATA to collection COL in database DB under TENANT."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/add")
+   (concat "/api/v2/tenants/"
+           tenant
+           "/databases/"
+           db
+           "/collections/"
+           col
+           "/add")
    data))
 
 (defun chroma-count-records (tenant db col)
   "Count records in collection COL within database DB under TENANT."
   (chroma-api-request
    "GET"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/count")))
+   (concat "/api/v2/tenants/"
+           tenant
+           "/databases/"
+           db
+           "/collections/"
+           col
+           "/count")))
 
 (defun chroma-delete-records (tenant db col data)
-  "Delete records defined by DATA from collection COL in database DB under TENANT."
+  "Delete records defined by DATA from collection COL in DB under TENANT."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/delete")
+   (concat "/api/v2/tenants/" tenant "/databases/"
+           db "/collections/" col "/delete")
    data))
 
 (defun chroma-fork-collection (tenant db col data)
   "Fork collection COL in database DB under TENANT with DATA options."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/fork")
+   (concat "/api/v2/tenants/" tenant "/databases/" db
+           "/collections/" col "/fork")
    data))
 
 (defun chroma-get-records (tenant db col data)
-  "Retrieve records defined by DATA from collection COL in database DB under TENANT."
+  "Retrieve records defined by DATA from collection COL in DB under TENANT."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/get")
+   (concat "/api/v2/tenants/" tenant "/databases/" db
+           "/collections/" col "/get")
    data))
 
 (defun chroma-query-collection (tenant db col data)
-  "Query collection COL in database DB under TENANT using DATA as query payload."
+  "Query collection COL in DB under TENANT using DATA as query payload."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/query")
+   (concat "/api/v2/tenants/" tenant
+           "/databases/" db
+           "/collections/" col
+           "/query")
    data))
 
 (defun chroma-update-records (tenant db col data)
-  "Update records defined by DATA in collection COL in database DB under TENANT."
+  "Update records defined by DATA in collection COL in DB under TENANT."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/update")
+   (concat "/api/v2/tenants/" tenant
+           "/databases/" db
+           "/collections/" col
+           "/update")
    data))
 
 (defun chroma-upsert-records (tenant db col data)
-  "Upsert records defined by DATA into collection COL in database DB under TENANT."
+  "Upsert records defined by DATA into collection COL in DB under TENANT."
   (chroma-api-request
    "POST"
-   (concat "/api/v2/tenants/" tenant "/databases/" db "/collections/" col "/upsert")
+   (concat "/api/v2/tenants/" tenant
+           "/databases/" db
+           "/collections/" col
+           "/upsert")
    data))
 
 (defun chroma-collections-count (tenant db)

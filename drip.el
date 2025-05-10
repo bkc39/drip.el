@@ -2,7 +2,7 @@
 
 ;; Author: Ben Carriel (pl.proofs@gmail.com)
 ;; Version: 0.1
-;; Package-Requires: ((emacs "29.1"))
+;; Package-Requires: ((emacs "29.1") (uuidgen "0"))
 ;; Keywords: tools
 ;; URL: https://github.com/bkc39/drip
 
@@ -14,6 +14,7 @@
 ;;; Code:
 
 (require 'ansi-color)
+(require 'chromadb)
 (require 'cl-lib)
 
 (defgroup drip nil
@@ -45,7 +46,6 @@ If DEBUG is non-nil, dump the keys of the returned JSON."
           (dump-keys-to-buffer data))
         (setq embedding (alist-get 'embedding data))))
     embedding))
-
 
 (defun drip-embed-file (file-path &optional debug)
   "Embed the text of FILE-PATH using ollama.
@@ -293,8 +293,6 @@ parsed JSON response."
       (goto-char url-http-end-of-headers)
       (setq data (json-read)))
     data))
-
-
 
 (provide 'drip)
 

@@ -1,4 +1,5 @@
 ;;; chromadb.el --- Chroma API client for Emacs -*- lexical-binding: t; -*-
+;; Package-Requires: ((emacs "29.1") (uuidgen "0"))
 
 ;;; Commentary:
 
@@ -9,7 +10,7 @@
 (require 'url)
 (require 'url-util)
 (require 'json)
-(require 'uuid)
+(require 'uuidgen)
 
 (defvar chroma-base-url "http://localhost:8000"
   "Base URL for the Chroma API.")

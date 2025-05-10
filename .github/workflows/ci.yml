@@ -1,0 +1,44 @@
+name: Emacs package CI
+
+on:
+  push:
+    paths-ignore:
+      - "README.md"
+  pull_request:
+
+jobs:
+  build:
+    name: byte-compile on ${{ matrix.emacs }}
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        emacs: ['27.2', '28.2', '29.3', 'snapshot']  # mirror MELPA’s range
+
+    steps:
+      # 1. Check out your source
+      - uses: actions/checkout@v4
+
+      # 2. Set up the requested Emacs version
+      - uses: purcell/setup-emacs@v3
+        with:
+          version: ${{ matrix.emacs }}
+
+      # 3. Cache the ELPA directory to speed​ up future runs
+      - name: Cache ELPA packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.emacs.d/elpa
+          key: elpa-${{ runner.os }}-${{ matrix.emacs }}-${{ hashFiles('**/*.el') }}
+          restore-keys: |
+            elpa-${{ runner.os }}-${{ matrix.emacs }}-
+
+      # 4. Install deps + byte-compile
+      - name: Install deps & byte-compile
+        run: |
+          set -euo pipefail
+          # All lisps in the repo (top-level .el files and those in subdirs)
+          emacs --batch -Q -l ci-setup.el -f batch-byte-compile \
+            chromadb.el \
+            drip.el

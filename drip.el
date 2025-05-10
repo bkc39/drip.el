@@ -161,6 +161,33 @@ If DEBUG is non-nil, dump embedding response keys."
       ;; Step 6: Call ChromaDB API
       (chroma-add-records tenant db col record-data))))
 
+(defun drip-retrieve-documents-for-prompt (prompt n-results)
+  "Retrieve DOCUMENTS and URIS for PROMPT with top N-RESULTS.
+Return a list of alists of the form ((uri . URIP) (document . DOCP)),
+with each document decoded as UTF-8."
+  (let* ((embedding-list (ollama-generate-embedding prompt))
+         (embed-vec       (apply #'vector embedding-list))
+         (payload
+          `(("include"          . ,(vector "documents" "uris"))
+            ("n_results"        . ,n-results)
+            ("query_embeddings" . ,(vector embed-vec))))
+         (response
+          (chroma-query-collection drip-chroma-db-tenant
+                                   drip-chroma-db-database
+                                   collection-id
+                                   payload))
+         (docs (alist-get 'documents response))
+         (uris (alist-get 'uris response)))
+    (let ((decoded-docs
+           (mapcar (lambda (doc)
+                     (decode-coding-string doc 'utf-8))
+                   (aref docs 0))))
+      (cl-mapcar (lambda (uri doc)
+                   `((uri      . ,uri)
+                     (document . ,doc)))
+                 (aref uris 0)
+                 decoded-docs))))
+
 (defvar drip-chroma-db-host "localhost"
   "Default host for drip-chroma-db.")
 
@@ -174,6 +201,12 @@ If nil, a temporary directory will be generated.")
 
 (defvar drip-chroma-db-process nil
   "Process handle for drip-chroma-db.")
+
+(defvar drip-chroma-db-tenant "default_tenant"
+  "Default tenant name for ChromaDB.")
+
+(defvar drip-chroma-db-database "default_database"
+  "Default collection name for ChromaDB.")
 
 (defun drip-chroma-db--process-filter (proc output)
   "Process filter for drip-chroma-db.

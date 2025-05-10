@@ -7,9 +7,7 @@
 ;;; Code:
 
 (require 'url)
-
 (require 'url-util)
-
 (require 'json)
 
 (defvar chroma-base-url "http://localhost:8000"
@@ -45,7 +43,7 @@ PARAMS, if non-nil, is an alist of query parameters."
   (chroma-api-request "GET" "/api/v2/heartbeat"))
 
 (defun chroma-get-pre-flight-checks ()
-  "Retrieve pre-flight checks status from the Chroma API."
+  "Retrieve pre-flight check status from the Chroma API."
   (chroma-api-request "GET" "/api/v2/pre-flight-checks"))
 
 (defun chroma-reset ()
@@ -208,7 +206,6 @@ PARAMS is an optional alist of query parameters."
 (defun chroma-get-version ()
   "Retrieve the current version of the Chroma API."
   (chroma-api-request "GET" "/api/v2/version"))
-
 
 (provide 'chromadb)
 

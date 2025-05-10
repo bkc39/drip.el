@@ -14,17 +14,18 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        emacs: ['27.2', '28.2', '29.3', 'snapshot']  # mirror MELPA’s range
+        emacs: ['27.2', '28.2', '29.3', 'snapshot']
 
     steps:
-      # 1. Check out your source
+      # Step 1: Check out the source code
       - uses: actions/checkout@v4
 
-      # 2. Install dependencies required for building Emacs
+      # Step 2: Install dependencies for building Emacs
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y make gcc libncurses-dev
+        run: sudo apt-get update && sudo apt-get install -y make gcc libncurses-dev \
+          libgnutls28-dev
 
-      # 3. Download and build the requested Emacs version
+      # Step 3: Download and build the requested Emacs version
       - name: Build Emacs
         run: |
           wget https://ftp.gnu.org/gnu/emacs/emacs-${{ matrix.emacs }}.tar.gz
@@ -34,7 +35,7 @@ jobs:
           make -j
           sudo make install
 
-      # 4. Cache the ELPA directory to speed up future runs
+      # Step 4: Cache the ELPA directory to speed up future runs
       - name: Cache ELPA packages
         uses: actions/cache@v4
         with:
@@ -43,11 +44,10 @@ jobs:
           restore-keys: |
             elpa-${{ runner.os }}-${{ matrix.emacs }}-
 
-      # 5. Install deps + byte-compile
+      # Step 5: Install deps & byte-compile
       - name: Install deps & byte-compile
         run: |
           set -euo pipefail
-          # All lisps in the repo (top-level .el files and those in subdirs)
           emacs --batch -Q -l ci-setup.el -f batch-byte-compile \
             chromadb.el \
             drip.el

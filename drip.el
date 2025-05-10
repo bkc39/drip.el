@@ -131,7 +131,7 @@ If DEBUG is non-nil, dump embedding response keys."
              ;; Step 3c: Convert to vector
              (embed-vec (apply #'vector embedding))
              ;; Step 3d: Generate uuid
-             (id (uuid-string))
+             (id (uuidgen-4))
              ;; Step 3e: Absolute path
              (abs (expand-file-name file))
              ;; Step 3f: Metadata alist

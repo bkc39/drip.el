@@ -96,9 +96,6 @@ PARAMS is an optional alist of query parameters."
    (concat "/api/v2/tenants/" tenant "/databases/" db "/collections")
    data))
 
-;; (chroma-create-collection "default_tenant" "default_database"
-;;                            '((name . "my_collection")))
-
 (defun chroma-get-collection (tenant db col)
   "Retrieve collection COL in database DB under TENANT."
   (chroma-api-request

@@ -1,4 +1,4 @@
-;;; chroma.el --- Chroma API client for Emacs -*- lexical-binding: t; -*-
+;;; chromadb.el --- Chroma API client for Emacs -*- lexical-binding: t; -*-
 
 ;;; Commentary:
 
@@ -9,6 +9,7 @@
 (require 'url)
 (require 'url-util)
 (require 'json)
+(require 'uuid)
 
 (defvar chroma-base-url "http://localhost:8000"
   "Base URL for the Chroma API.")
@@ -94,6 +95,9 @@ PARAMS is an optional alist of query parameters."
    "POST"
    (concat "/api/v2/tenants/" tenant "/databases/" db "/collections")
    data))
+
+;; (chroma-create-collection "default_tenant" "default_database"
+;;                            '((name . "my_collection")))
 
 (defun chroma-get-collection (tenant db col)
   "Retrieve collection COL in database DB under TENANT."

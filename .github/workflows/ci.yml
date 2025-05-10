@@ -8,13 +8,8 @@ on:
 
 jobs:
   build:
-    name: byte-compile on ${{ matrix.emacs }}
+    name: byte-compile on Emacs 29.3
     runs-on: ubuntu-latest
-
-    strategy:
-      fail-fast: false
-      matrix:
-        emacs: ['27.2', '28.2', '29.3', 'snapshot']
 
     steps:
       # Step 1: Check out the source code
@@ -22,15 +17,15 @@ jobs:
 
       # Step 2: Install dependencies for building Emacs
       - name: Install dependencies
-        run: sudo apt-get update && sudo apt-get install -y make gcc libncurses-dev
+        run: sudo apt-get update && sudo apt-get install -y make gcc libncurses-dev openssl libssl-dev
 
-      # Step 3: Download and build the requested Emacs version
+      # Step 3: Download and build Emacs 29.3
       - name: Build Emacs
         run: |
-          wget https://ftp.gnu.org/gnu/emacs/emacs-${{ matrix.emacs }}.tar.gz
-          tar -xzf emacs-${{ matrix.emacs }}.tar.gz
-          cd emacs-${{ matrix.emacs }}
-          ./configure --with-gnutls=ifavailable
+          wget https://ftp.gnu.org/gnu/emacs/emacs-29.3.tar.gz
+          tar -xzf emacs-29.3.tar.gz
+          cd emacs-29.3
+          ./configure
           make -j
           sudo make install
 
@@ -39,9 +34,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.emacs.d/elpa
-          key: elpa-${{ runner.os }}-${{ matrix.emacs }}-${{ hashFiles('**/*.el') }}
+          key: elpa-${{ runner.os }}-29.3-${{ hashFiles('**/*.el') }}
           restore-keys: |
-            elpa-${{ runner.os }}-${{ matrix.emacs }}-
+            elpa-${{ runner.os }}-29.3-
 
       # Step 5: Install deps & byte-compile
       - name: Install deps & byte-compile

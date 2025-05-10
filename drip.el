@@ -8,6 +8,9 @@
 
 ;; This file is not part of GNU Emacs.
 
+;;; Commentary:
+;; Local RAG solution scaffold for LLMs, embedding via Ollama and ChromaDB.
+
 ;;; Code:
 
 (require 'ansi-color)
@@ -112,10 +115,38 @@ the process will be killed when that buffer is killed."
       (read-only-mode 1))
     (display-buffer buf)))
 
-(defun drip-hello-world ()
-  "Display Hello, world!"
-  (interactive)
-  (message "Hello, world!"))
+(defun drip-chroma-db-create-collection (name &optional tenant database)
+  "Create a new collection named NAME in the Chroma database.
+
+NAME is the string name of the collection to create.  Optional TENANT is
+the tenant identifier; defaults to `drip-chroma-db-tenant' or
+\"default_tenant\".  Optional DATABASE is the database name; defaults to
+`drip-chroma-db-database' or \"default_database\".  Sends a POST request
+to the Chroma API endpoint
+/api/v2/tenants/TENANT/databases/DATABASE/collections and returns the
+parsed JSON response."
+  (interactive "sCollection name: ")
+  (let* ((tenant (or tenant drip-chroma-db-tenant "default_tenant"))
+         (database (or database drip-chroma-db-database "default_database"))
+         (url-request-method "POST")
+         (url-request-extra-headers
+          '(("Content-Type" . "application/json")))
+         (url-request-data
+          (json-encode `(("name" . ,name))))
+         (url
+          (format "http://%s:%s/api/v2/tenants/%s/databases/%s/collections"
+                  drip-chroma-db-host
+                  drip-chroma-db-port
+                  tenant
+                  database))
+         data)
+    (with-current-buffer
+        (url-retrieve-synchronously url t t 5)
+      (goto-char url-http-end-of-headers)
+      (setq data (json-read)))
+    data))
+
+
 
 (provide 'drip)
 

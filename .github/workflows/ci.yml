@@ -31,7 +31,7 @@ jobs:
           tar -xzf emacs-${{ matrix.emacs }}.tar.gz
           cd emacs-${{ matrix.emacs }}
           ./configure
-          make
+          make -j
           sudo make install
 
       # 4. Cache the ELPA directory to speed up future runs

@@ -33,7 +33,8 @@
       (let ((desc (package-install pkg)))
         (princ (format "  package-install returned: %S\n" desc))))))
 
-;; 3) Install every dependency mentioned in any *.el file passed on the command line
+;; 3) Install every dependency mentioned in any *.el file passed on
+;; the command line
 (cl-loop for arg in command-line-args-left
          ;; zsh may give us "file1.el\nfile2.el" in a single ARG
          for files = (split-string arg "\n" t)
@@ -44,7 +45,7 @@
 
 ;; 4) Expose freshly installed packages to the compiler
 (add-to-list 'load-path package-user-dir)
-(add-to-list 'load-path default-directory)<
+(add-to-list 'load-path default-directory)
 
 ;; 5) Make warnings fatal & verbose
 (setq byte-compile-warnings '(error)

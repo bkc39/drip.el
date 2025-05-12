@@ -1,6 +1,7 @@
 ;;; ci-setup.el --- Install deps & prep for batch compile  -*- lexical-binding:t; -*-
 ;; Usage:  emacs -Q --batch -l ci-setup.el -f batch-byte-compile FILES...
-
+;;; Commentary:
+;;; Code:
 (require 'package)
 (require 'cl-lib)
 
